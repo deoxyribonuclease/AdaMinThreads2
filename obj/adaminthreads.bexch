@@ -1,0 +1,22 @@
+[GENERATED OBJECT FILE]
+b__adaminthreads.o
+[PROJECT FILES]
+C:\Users\Vlad\Desktop\Lab2\adaminthreads.gpr
+20240303215010 3811bbd4ad611c1fdb393a531dd89636
+[BOUND OBJECT FILES]
+C:\Users\Vlad\Desktop\Lab2\obj\adaminthreads.o
+[GENERATED SOURCE FILES]
+b__adaminthreads.ads
+b__adaminthreads.adb
+b__adaminthreads.ali
+[RESULTING OPTIONS]
+-LC:\Users\Vlad\Desktop\Lab2\obj\
+-LC:\Users\Vlad\Desktop\Lab2\obj\
+-LC:/gnat/2021/lib/gcc/x86_64-w64-mingw32/10.3.1/adalib/
+-static
+-static-libgcc
+C:/gnat/2021/lib/gcc/x86_64-w64-mingw32/10.3.1/adalib/libgnarl.a
+C:/gnat/2021/lib/gcc/x86_64-w64-mingw32/10.3.1/adalib/libgnat.a
+-Xlinker
+--stack=0x200000,0x1000
+-mthreads
