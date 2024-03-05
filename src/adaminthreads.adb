@@ -16,11 +16,13 @@ procedure Adaminthreads is
 
    protected type Shared_Array is
       procedure Initialize;
+      function Get_Threads return Integer;
       function Get_Min return Integer;
       function Get_Min_Index return Integer;
       function Get_Element(Index : Integer) return Integer;
       procedure Set_Element(Index : Integer; Value : Integer);
    private
+      Thread_Count : Integer := 0;
       arr : My_Array;
       Min_Global : Integer;
       Indx_Global : Integer;
@@ -28,13 +30,17 @@ procedure Adaminthreads is
 
    protected body Shared_Array is
       procedure Initialize is
+      Random_Index : Integer := Random(G) mod arrLength;
       begin
-         Reset(G);
          for I in arr'Range loop
             arr(I) := abs Random(G);
          end loop;
-         Min_Global := arr(1);
-         Indx_Global := 1;
+
+         arr(Random_Index) := -8;
+         Put_Line("Element at index" & Random_Index'Img & " is now negative: -8");
+
+         Min_Global := Integer'Last;
+         Indx_Global := -1;
          for I in arr'Range loop
             if arr(I) < Min_Global then
                Min_Global := arr(I);
@@ -42,6 +48,11 @@ procedure Adaminthreads is
             end if;
          end loop;
       end Initialize;
+
+      function Get_Threads return Integer is
+      begin
+         return Thread_Count;
+      end Get_Threads;
 
       function Get_Min return Integer is
       begin
@@ -61,10 +72,10 @@ procedure Adaminthreads is
       procedure Set_Element(Index : Integer; Value : Integer) is
       begin
          arr(Index) := Value;
-         if Value < Min_Global then
-            Min_Global := Value;
-            Indx_Global := Index;
-         end if;
+         Thread_Count := Thread_Count + 1;
+        if(Get_Threads = thread_num) then
+        Put_Line("Minimum element is " & Get_Min'Img & " at index " & Get_Min_Index'Img);
+        end if;
       end Set_Element;
    end Shared_Array;
 
@@ -93,33 +104,19 @@ procedure Adaminthreads is
                Indx_Local := I;
             end if;
          end loop;
-         SA.Set_Element(Start, Min_Local);
          Put_Line("Thread"& Thread'Img & ": min element is -" & Min_Local'Img & " at index" & Indx_Local'Img);
+         SA.Set_Element(Start, Min_Local);
       end;
    end Min_Finder;
    Min_Finders : array(1..thread_num) of Min_Finder;
 
 begin
+   Reset(G);
    SA.Initialize;
-
-   -- replace random element
-   declare
-      Random_Index : Integer := Random(G) mod arrLength + 1;
-   begin
-      SA.Set_Element(Random_Index, -8);
-      Put_Line("Element at index" & Random_Index'Img & " is now negative: -8");
-   end;
 
    -- cut and start
    for I in 1..thread_num loop
       Min_Finders(I).Starts((I-1) * arrLength / thread_num + 1, I * arrLength / thread_num, I);
    end loop;
 
-   -- print final min value
-   for I in 1..arrLength loop
-      if SA.Get_Element(I) = SA.Get_Min then
-         Put_Line("Minimum element is " & SA.Get_Min'Img & " at index " & SA.Get_Min_Index'Img);
-         exit;
-      end if;
-   end loop;
 end Adaminthreads;
