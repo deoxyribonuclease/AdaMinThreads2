@@ -5,7 +5,7 @@ with Ada.Numerics.Discrete_Random;
 procedure Adaminthreads is
 
    arrLength : constant Integer := 100000;
-   thread_num : constant Integer := 10;
+   thread_num : constant Integer := 100;
 
    type My_Array is array (1..arrLength) of Integer;
 
@@ -16,7 +16,6 @@ procedure Adaminthreads is
 
    protected type Shared_Array is
       procedure Initialize;
-      function Get_Threads return Integer;
       function Get_Min return Integer;
       function Get_Min_Index return Integer;
       function Get_Element(Index : Integer) return Integer;
@@ -41,18 +40,7 @@ procedure Adaminthreads is
 
          Min_Global := Integer'Last;
          Indx_Global := -1;
-         for I in arr'Range loop
-            if arr(I) < Min_Global then
-               Min_Global := arr(I);
-               Indx_Global := I;
-            end if;
-         end loop;
       end Initialize;
-
-      function Get_Threads return Integer is
-      begin
-         return Thread_Count;
-      end Get_Threads;
 
       function Get_Min return Integer is
       begin
@@ -71,10 +59,13 @@ procedure Adaminthreads is
 
       procedure Set_Element(Index : Integer; Value : Integer) is
       begin
-         arr(Index) := Value;
+          if arr(Index) < Min_Global then
+               Min_Global := arr(Index);
+               Indx_Global := Index;
+            end if;
          Thread_Count := Thread_Count + 1;
-        if(Get_Threads = thread_num) then
-        Put_Line("Minimum element is " & Get_Min'Img & " at index " & Get_Min_Index'Img);
+        if(Thread_Count = thread_num) then
+        Put_Line("Minimum element is " & Min_Global'Img & " at index " & Indx_Global'Img);
         end if;
       end Set_Element;
    end Shared_Array;
@@ -105,7 +96,7 @@ procedure Adaminthreads is
             end if;
          end loop;
          Put_Line("Thread"& Thread'Img & ": min element is -" & Min_Local'Img & " at index" & Indx_Local'Img);
-         SA.Set_Element(Start, Min_Local);
+         SA.Set_Element(Indx_Local, Min_Local);
       end;
    end Min_Finder;
    Min_Finders : array(1..thread_num) of Min_Finder;
