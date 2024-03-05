@@ -39,10 +39,10 @@ package body ada_main is
    E139 : Short_Integer; pragma Import (Ada, E139, "ada__real_time_E");
    E094 : Short_Integer; pragma Import (Ada, E094, "ada__text_io_E");
    E180 : Short_Integer; pragma Import (Ada, E180, "system__random_seed_E");
-   E196 : Short_Integer; pragma Import (Ada, E196, "system__tasking__initialization_E");
+   E194 : Short_Integer; pragma Import (Ada, E194, "system__tasking__initialization_E");
    E184 : Short_Integer; pragma Import (Ada, E184, "system__tasking__protected_objects_E");
-   E200 : Short_Integer; pragma Import (Ada, E200, "system__tasking__protected_objects__entries_E");
-   E204 : Short_Integer; pragma Import (Ada, E204, "system__tasking__queuing_E");
+   E190 : Short_Integer; pragma Import (Ada, E190, "system__tasking__protected_objects__entries_E");
+   E202 : Short_Integer; pragma Import (Ada, E202, "system__tasking__queuing_E");
    E208 : Short_Integer; pragma Import (Ada, E208, "system__tasking__stages_E");
 
    Sec_Default_Sized_Stacks : array (1 .. 1) of aliased System.Secondary_Stack.SS_Stack (System.Parameters.Runtime_Default_Sec_Stack_Size);
@@ -54,7 +54,7 @@ package body ada_main is
 
    procedure finalize_library is
    begin
-      E200 := E200 - 1;
+      E190 := E190 - 1;
       declare
          procedure F1;
          pragma Import (Ada, F1, "system__tasking__protected_objects__entries__finalize_spec");
@@ -174,20 +174,20 @@ package body ada_main is
            False),
          Value => (0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
          Violated =>
-          (False, False, False, False, True, True, False, False, 
+          (True, False, False, False, True, True, False, False, 
            True, False, False, True, True, True, True, False, 
            False, False, False, True, False, False, True, True, 
            False, True, True, False, True, True, True, True, 
            False, False, False, False, False, True, False, True, 
-           True, False, False, False, True, True, False, False, 
+           True, False, True, False, True, True, False, False, 
            False, True, False, False, False, True, False, False, 
            False, False, False, True, False, False, True, False, 
            True, True, True, False, False, True, False, True, 
            True, True, False, True, True, False, True, True, 
            True, True, False, False, False, False, False, False, 
-           False, False, False, False, True, True, False, True, 
+           False, False, True, False, True, True, False, True, 
            False),
-         Count => (0, 0, 0, 0, 0, 1, 1, 0, 1, 0),
+         Count => (0, 0, 0, 1, 0, 1, 1, 0, 1, 0),
          Unknown => (False, False, False, False, False, False, True, False, True, False));
       Priority_Specific_Dispatching :=
         Local_Priority_Specific_Dispatching'Address;
@@ -275,13 +275,13 @@ package body ada_main is
       System.Random_Seed'Elab_Body;
       E180 := E180 + 1;
       System.Tasking.Initialization'Elab_Body;
-      E196 := E196 + 1;
+      E194 := E194 + 1;
       System.Tasking.Protected_Objects'Elab_Body;
       E184 := E184 + 1;
       System.Tasking.Protected_Objects.Entries'Elab_Spec;
-      E200 := E200 + 1;
+      E190 := E190 + 1;
       System.Tasking.Queuing'Elab_Body;
-      E204 := E204 + 1;
+      E202 := E202 + 1;
       System.Tasking.Stages'Elab_Body;
       E208 := E208 + 1;
    end adainit;

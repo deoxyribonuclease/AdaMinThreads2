@@ -6,6 +6,8 @@ procedure Adaminthreads is
 
    arrLength : constant Integer := 100000;
    thread_num : constant Integer := 100;
+   Result_Index : Integer := 0;
+   Result_Value : Integer := 0;
 
    type My_Array is array (1..arrLength) of Integer;
 
@@ -16,6 +18,7 @@ procedure Adaminthreads is
 
    protected type Shared_Array is
       procedure Initialize;
+      entry Get_Final_Min (Value : out Integer;Index : out Integer );
       function Get_Min return Integer;
       function Get_Min_Index return Integer;
       function Get_Element(Index : Integer) return Integer;
@@ -42,6 +45,13 @@ procedure Adaminthreads is
          Indx_Global := -1;
       end Initialize;
 
+      entry Get_Final_Min (Value : out Integer;Index : out Integer ) when Thread_Count = thread_num is
+      begin
+         Value := Min_Global;
+         Index := Indx_Global;
+         --Put_Line("Final Minimum element is " & Min_Global'Img & " at index " & Indx_Global'Img);
+      end Get_Final_Min;
+
       function Get_Min return Integer is
       begin
          return Min_Global;
@@ -64,9 +74,7 @@ procedure Adaminthreads is
                Indx_Global := Index;
             end if;
          Thread_Count := Thread_Count + 1;
-        if(Thread_Count = thread_num) then
-        Put_Line("Minimum element is " & Min_Global'Img & " at index " & Indx_Global'Img);
-        end if;
+
       end Set_Element;
    end Shared_Array;
 
@@ -109,5 +117,8 @@ begin
    for I in 1..thread_num loop
       Min_Finders(I).Starts((I-1) * arrLength / thread_num + 1, I * arrLength / thread_num, I);
    end loop;
+
+  SA.Get_Final_Min(Result_Value, Result_Index);
+   Put_Line("Final Minimum element is " & Result_Value'Img & " at index " & Result_Index'Img);
 
 end Adaminthreads;
